@@ -76,7 +76,7 @@ returnFnResult(function() {
    console.log(f()); // выведет 12
    console.log(f()); // выведет 13
  */
-
+/*
 var globalNumber;
 var counter = function() { 
     return globalNumber = globalNumber + 1;
@@ -89,6 +89,15 @@ function returnCounter(number = 0) {
 }
 
 var result = returnCounter(10);
+*/
+
+function returnCounter(number = 0) {
+
+    return function() { 
+        return ++number;
+    }
+}
+var result = returnCounter(10);
 
 /*
  Задание 5 *:
@@ -99,7 +108,7 @@ var result = returnCounter(10);
  Пример:
    returnArgumentsArray(1, 2, 3) вернет [1, 2, 3]
  */
-
+/*
 function returnArgumentsArray() {
     var arrayArgs = [];
 
@@ -109,7 +118,11 @@ function returnArgumentsArray() {
 
     return arrayArgs;
 }
+*/
+function returnArgumentsArray(...args) {
 
+    return args;
+}
 /*
  Задание 6 *:
 
@@ -126,23 +139,21 @@ function returnArgumentsArray() {
    console.log(newSum()) выведет 6
  */
 
-function sum(a, b, c) {
+function sum(a, b) {
     result = a + b;
 
     return result;
 }
 
 function bindFunction(fn, ...args) {
-    result = function() {
+    return function() {
         return fn.apply(null, args);
     }
-
-    return result
 }
 
 var newSum = bindFunction(sum, 6, 4, 7);
 
-newSum();
+newSum()
 
 export {
     returnFirstArgument,
