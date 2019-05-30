@@ -6,28 +6,40 @@
  Напишите аналог встроенного метода forEach для работы с массивами
  Посмотрите как работает forEach и повторите это поведение для массива, который будет передан в параметре array
  */
-var numbers = [1, 3, 5];
+//var numbers = [1, 3, 5];
 
-function forEach1(array, fn) {
+function forEach(array, fn) {
   for (let i = 0; i < array.length; i++) {
     fn(array[i], i, array)
   }
 }
 
+/*
 var sum = function(num, index, arr){
   console.log(num + 1);
 }
 
-forEach1(numbers, sum);
-
+forEach(numbers, sum);
+*/
 /*
  Задание 2:
 
  Напишите аналог встроенного метода map для работы с массивами
  Посмотрите как работает map и повторите это поведение для массива, который будет передан в параметре array
  */
+
 function map(array, fn) {
+  var results = []; 
+
+  for (let i = 0; i < array.length; i++ ) { 
+      let item = fn(array[i], i, array); 
+
+      results.push(item); 
+  }
+
+  return results; 
 }
+
 
 /*
  Задание 3:
@@ -35,7 +47,16 @@ function map(array, fn) {
  Напишите аналог встроенного метода reduce для работы с массивами
  Посмотрите как работает reduce и повторите это поведение для массива, который будет передан в параметре array
  */
+
 function reduce(array, fn, initial) {
+  var i = 0;
+  var result = initial || array[i++];
+
+  while (i < array.length) {
+      result = fn(result, array[i], i, array);
+      i++;
+  }
+  return result;
 }
 
 /*
