@@ -6,12 +6,11 @@
  Напишите аналог встроенного метода forEach для работы с массивами
  Посмотрите как работает forEach и повторите это поведение для массива, который будет передан в параметре array
  */
-//var numbers = [1, 3, 5];
 
 function forEach(array, fn) {
-  for (let i = 0; i < array.length; i++) {
-    fn(array[i], i, array)
-  }
+    for (let i = 0; i < array.length; i++) {
+        fn(array[i], i, array)
+    }
 }
 
 /*
@@ -29,17 +28,16 @@ forEach(numbers, sum);
  */
 
 function map(array, fn) {
-  var results = []; 
+    var results = [];
 
-  for (let i = 0; i < array.length; i++ ) { 
-      let item = fn(array[i], i, array); 
+    for (let i = 0; i < array.length; i++ ) {
+        let result = fn(array[i], i, array);
 
-      results.push(item); 
-  }
+        results.push(result);
+    }
 
-  return results; 
+    return results; 
 }
-
 
 /*
  Задание 3:
@@ -49,14 +47,21 @@ function map(array, fn) {
  */
 
 function reduce(array, fn, initial) {
-  var i = 0;
-  var result = initial || array[i++];
+    var i = 0;
 
-  while (i < array.length) {
-      result = fn(result, array[i], i, array);
-      i++;
-  }
-  return result;
+    var result = initial;
+
+    if (result == undefined) {
+        result = array[i];
+        i = i + 1;
+    }
+
+    while (i < array.length) {
+        result = fn(result, array[i], i, array);
+        i = i + 1;
+    }
+
+    return result;
 }
 
 /*
@@ -68,12 +73,14 @@ function reduce(array, fn, initial) {
    upperProps({ name: 'Сергей', lastName: 'Петров' }) вернет ['NAME', 'LASTNAME']
  */
 function upperProps(obj) {
-  var arr = [];
-  for (var key in obj) {
-      key = key.toUpperCase();
-      arr.push(key);
-  }
-  return arr;
+    var array = [];
+
+    for (var key in obj) {
+        key = key.toUpperCase();
+        array.push(key);
+    }
+
+    return array;
 }
 /*
  Задание 5 *:
@@ -81,7 +88,31 @@ function upperProps(obj) {
  Напишите аналог встроенного метода slice для работы с массивами
  Посмотрите как работает slice и повторите это поведение для массива, который будет передан в параметре array
  */
-function slice(array, from, to) {
+
+function slice(array, from = 0, to = array.length) {
+    if (from < -array.length) {
+        from = 0;
+    }
+
+    if (to > array.length) {
+        to = array.length;
+    }
+
+    if (from < 0) {
+        from = array.length + from;
+    }
+
+    if (to < 0) {
+        to = array.length + to;
+    }
+
+    var newarray = [];
+
+    for (from; from < to; from++) {
+        newarray.push(array[from]);
+    }
+
+    return newarray;
 }
 
 /*
