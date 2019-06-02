@@ -28,9 +28,9 @@ function isPositive(a){
 */
 
 function isAllTrue(array, fn) {
-    if (array.constructor != Array || array.length === 0) {
+    if (array.constructor !== Array || array.length === 0) {
         throw new Error('empty array');
-    } else if (typeof fn != 'function') {
+    } else if (typeof fn !== 'function') {
         throw new Error('fn is not a function');
     }
     for (var i = 0; i < array.length; i++) {
@@ -70,9 +70,9 @@ function isAllTrue(array, fn) {
    isSomeTrue([1, 2, 3, 4, 5], n => n > 20) // вернет false
  */
 function isSomeTrue(array, fn) {
-    if (Array.isArray(array) === false || array.length === 0) {
+    if (array.constructor !== Array || array.length === 0) {
         throw new Error('empty array');
-    } else if (typeof fn != 'function') {
+    } else if (typeof fn !== 'function') {
         throw new Error('fn is not a function');
     }
     for (var i = 0; i < array.length; i++) {
@@ -105,7 +105,7 @@ function isSomeTrue(array, fn) {
 // }
 
 function returnBadArguments(fn, ...args) {
-    if (typeof fn != 'function') {
+    if (typeof fn !== 'function') {
         throw new Error('fn is not a function');
     }
     var arrayBadArg = [];
@@ -139,48 +139,74 @@ function returnBadArguments(fn, ...args) {
    - какой-либо из аргументов div является нулем (с текстом "division by 0")
  */
 
+// function calculator(number = 0) {
+//     if (typeof number !== 'number') {
+//         throw new Error('number is not a number');
+//     }
+//     var obj = {};
+
+//     var result = number;
+
+//     obj.sum = function(...args) {
+//         for (let i = 0; i < args.length; i++) {
+//             result = result + args[i];
+//         }
+
+//         return result;
+
+//     };
+  
+//     obj.dif = function(...args) {
+//         for (let i = 0; i < args.length; i++) {
+//             result = result - args[i];
+//         }
+
+//         return result;
+//     };
+  
+//     obj.div = function(...args) {
+//         for (let i = 0; i < args.length; i++) {
+//             if (args[i] === 0) {
+//                 throw new Error('division by 0');
+//             }
+//             result = result / args[i];
+//         }
+
+//         return result;
+//     };
+
+//     obj.mul = function(...args) {
+//         for (let i = 0; i < args.length; i++) {
+//             result = result * args[i];
+//         }
+
+//         return result;
+//     };
+
+//     return obj;
+// }
+
 function calculator(number = 0) {
-    if (typeof number != 'number') {
+    if (typeof number !== 'number') {
         throw new Error('number is not a number');
     }
     var obj = {};
 
-    var result = number;
-
     obj.sum = function(...args) {
-        for (let i = 0; i < args.length; i++) {
-            result = result + args[i];
-        }
+        return args.reduce((resultValue, iElemArray) => (resultValue + iElemArray), number);
+    }
 
-        return result;
-
-    };
-  
     obj.dif = function(...args) {
-        for (let i = 0; i < args.length; i++) {
-            result = result - args[i];
-        }
-
-        return result;
+        return args.reduce((resultValue, iElemArray) => (resultValue - iElemArray), number);
     };
-  
-    obj.div = function(...args) {
-        for (let i = 0; i < args.length; i++) {
-            if (args[i] === 0) {
-                throw new Error('division by 0');
-            }
-            result = result / args[i];
-        }
 
-        return result;
+    obj.div = function(...args) {
+        if (args.some(elem => elem === 0)) throw new Error('division by 0');
+        return args.reduce((resultValue, iElemArray) => (resultValue / iElemArray), number);
     };
 
     obj.mul = function(...args) {
-        for (let i = 0; i < args.length; i++) {
-            result = result * args[i];
-        }
-
-        return result;
+        return args.reduce((resultValue, iElemArray) => (resultValue * iElemArray), number);
     };
 
     return obj;
