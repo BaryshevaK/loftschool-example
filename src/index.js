@@ -51,14 +51,14 @@ function reduce(array, fn, initial) {
 
     var result = initial;
 
-    if (result == undefined) {
+    if (result === undefined) {
         result = array[i];
-        i = i + 1;
+        i++;
     }
 
     while (i < array.length) {
         result = fn(result, array[i], i, array);
-        i = i + 1;
+        i++;
     }
 
     return result;
