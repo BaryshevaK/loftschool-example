@@ -201,7 +201,10 @@ function calculator(number = 0) {
     };
 
     obj.div = function(...args) {
-        if (args.some(elem => elem === 0)) throw new Error('division by 0');
+        if (args.some(elem => elem === 0)) {
+            throw new Error('division by 0');
+        }
+
         return args.reduce((resultValue, iElemArray) => (resultValue / iElemArray), number);
     };
 
