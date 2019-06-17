@@ -62,24 +62,12 @@ function addCookieToTable(name, value) {
         }
     }
 
-    const newItem = document.createElement('tr');
-    const nameItem = document.createElement('td');
-    const valueItem = document.createElement('td');
-    const buttonTd = document.createElement('td');
-    const buttonDel = document.createElement('button');
+    const newItem = document.createElement('tr')
 
-    valueItem.textContent = value;
-    nameItem.textContent = name;
-    buttonDel.textContent = 'Удалить';
-
-    buttonTd.appendChild(buttonDel);
-    newItem.appendChild(nameItem);
-    newItem.appendChild(valueItem);
-    newItem.appendChild(buttonTd);
-
+    newItem.innerHTML = `<tr> <td> ${name}</td> <td> ${value} </td> <td> <button> Удалить </button> </td> </tr>`;
     listTable.appendChild(newItem);
-    buttonDel.addEventListener('click', () => {
-        deleteCookie(nameItem.textContent);
+    newItem.children[2].children[0].addEventListener('click', () => {
+        deleteCookie(newItem.children[0].textContent);
         listTable.removeChild(newItem);
     });
 }
