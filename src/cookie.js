@@ -44,29 +44,11 @@ const addButton = homeworkContainer.querySelector('#add-button');
 const listTable = homeworkContainer.querySelector('#list-table tbody');
 
 filterNameInput.addEventListener('keyup', function() {
-    var cookies = getCookies()
-    var trElemCount = listTable.children.length;
-    var cookiesLen = cookies.length;
-
-    for (let i = 0; i < trElemCount; i++) {
-        listTable.removeChild(listTable.children[0]);
-    }
-    for (let i = 0; i < cookiesLen; i++) {
-        if (isMatching(cookies[i][0], cookies[i][1], filterNameInput.value)) {
-            addCookieToTable(cookies[i][0], cookies[i][1])
-        }
-    }
+    filter();
 });
 
 addButton.addEventListener('click', () => {
-    var name = addNameInput.value;
-    var value = addValueInput.value;
-
-    document.cookie = name+'='+value;
-    if (isMatching(name, value, filterNameInput.value)) {
-        addCookieToTable(name, value);
-    }
-    filterNameInput.dispatchEvent(new Event('keyup'));
+    addCookie();
 });
 
 function addCookieToTable(name, value) {
@@ -109,10 +91,6 @@ function deleteCookie(name) {
 }
 
 function isMatching(name, value, chunk) {
-    // переводим строку и подстроку в нижний регистр
-    // full = full.toLowerCase();
-    // chunk = chunk.toLowerCase();
-    // проверка наличия подстроки в строке
     if (( name.indexOf( chunk ) + 1 ) || ( value.indexOf( chunk ) + 1 )) {
         return true;
     }
@@ -131,4 +109,21 @@ function getCookies() {
     }
 
     return cookies;
+}
+
+var filter = function() {
+    var cookies = getCookies()
+
+    listTable.innerHTML = '';
+    cookies.map(cookie => (isMatching(cookie[0], cookie[1], filterNameInput.value) 
+        && addCookieToTable(cookie[0], cookie[1])))
+}
+
+var addCookie = function() {
+    var name = addNameInput.value;
+    var value = addValueInput.value;
+
+    document.cookie = name+'='+value;
+    isMatching(name, value, filterNameInput.value) && addCookieToTable(name, value);
+    filter();
 }
