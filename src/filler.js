@@ -6,7 +6,7 @@ export default async(map, clusterer, balloonopenFunction) => { // eslint-disable
 
     console.log(storedLocations)
     storedLocations.forEach(location => {
-        var newPlacemark = Marker(map, clusterer, [location.coords.lon, location.coords.lat], location.address, location.review, balloonopenFunction, false);
+        var newPlacemark = Marker(map, clusterer, location.coords, location.address, location.review, balloonopenFunction);
 
         placemarks.push(newPlacemark)
 

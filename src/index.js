@@ -2,6 +2,9 @@ import Marker from './marker.js';
 import GeoCoder from './geocoder.js';
 import Clusterer from './clusterer.js'
 import FillPlacemarksFromStorage from './filler.js';
+import Layout from './balloonLayout.js';
+import Dater from './dater.js'
+
 
 var storedLocations = JSON.parse(localStorage.getItem('locations', '') || '[]')
 
@@ -21,17 +24,11 @@ async function main () { // eslint-disable-line
         // Слушаем клик на карте.
         myMap.events.add('click', async function (e) {
             const coords = e.get('coords');
-            const location = await GeoCoder(coords) || 'undefined'
-            
-            console.log(storedLocations)  // eslint-disable-line
-            const address = location.address;
-            const source = $('#balloon-template').html() // eslint-disable-line
-            const template = Handlebars.compile(source) // eslint-disable-line
-            const context = { properties: {'address': address }}
-            const precompiledHtml = template(context)
-            await myMap.balloon.open(coords, precompiledHtml)
+            const address = (await GeoCoder(coords)).address;
+            const balloonLayout = Layout(address)
+            await myMap.balloon.open(coords, balloonLayout)
             document.getElementById("balloonAddReviewButton").addEventListener("click", () => {
-                addReview(myMap, clusterer, location, coords)
+                addReview(myMap, clusterer, address, coords)
             });
         });
     });
@@ -41,21 +38,19 @@ async function main () { // eslint-disable-line
 main()
 
 
-function addReview (myMap, clusterer, location, coords) {
-    const name = document.getElementById('balloonInputName').value
-    const place = document.getElementById('balloonInputPlace').value
-    const comment = document.getElementById('balloonInputComment').value
-    const reviews = document.getElementById('balloonReviews')
-    const newReview = `\n${name}, ${place}: ${comment}`
-    const storedLocations = JSON.parse(localStorage.getItem('locations', '') || '[]')
-
-    console.log(reviews.innerText)
-    reviews.innerText = (reviews.innerText==='Отзывов пока нет') ? newReview : reviews.innerText + newReview;
-    const review = { name: name, place: place, comment: comment };
-
-    location.review = review
-    storedLocations.push(location)
+function addReview (myMap, clusterer, address, coords) {
+    const dateTime = Dater();
+    const nameInput = document.getElementById('balloonInputName');
+    const placeInput = document.getElementById('balloonInputPlace');
+    const commentInput = document.getElementById('balloonInputComment');
+    const reviews = document.getElementById('balloonReviews');
+    const newReview = { name: nameInput.value, place: placeInput.value, comment: commentInput.value, dateTime: dateTime };
+    const newReviewText = `${newReview.name} ${newReview.place} ${dateTime}\n${newReview.comment}`;
+    const storedLocations = JSON.parse(localStorage.getItem('locations', '') || '[]');
+    console.log(reviews.innerText);
+    reviews.innerText = (reviews.innerText==='Отзывов пока нет') ? newReviewText : `${reviews.innerText}\n${newReviewText}`;
+    storedLocations.push({address: address, coords: coords, review: newReview });
     localStorage.setItem('locations', JSON.stringify(storedLocations));
-    Marker(myMap, clusterer, coords, location.address, location.review, addReview, true);
-
+    Marker(myMap, clusterer, coords, address, newReview, addReview);
+    nameInput.value = placeInput.value = commentInput.value = '';
 }

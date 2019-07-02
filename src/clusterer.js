@@ -1,14 +1,15 @@
 export default () => {
     var customItemContentLayout = ymaps.templateLayoutFactory.createClass(
         '<div> {{ properties.review.place }} <div> ' +
-        '<div> {{ properties.address }} <div> ' +
-        '<div> {{ properties.review.comment }} <div> '
+        '<div><a id="addressLink" href="javascript:void(0)"> {{ properties.address }} </a> <div> ' +
+        '<div> {{ properties.review.comment }} <div> ' +
+        '<div> {{ properties.review.dateTime }} <div> '
     );
 
     console.log(customItemContentLayout)
 
     var clusterer = new ymaps.Clusterer({ // eslint-disable-line
-        clusterpreset: 'twirl#invertedVioletClusterIcons',
+        preset: 'islands#invertedVioletClusterIcons',
         clusterDisableClickZoom: true,
         clusterOpenBalloonOnClick: true,
         // Устанавливаем стандартный макет балуна кластера "Карусель".
@@ -31,6 +32,15 @@ export default () => {
         // Можно отключить отображение меню навигации.
         // clusterBalloonPagerVisible: false
     });
+
+    clusterer.events.add('balloonopen', async () => {
+        
+        const link = document.getElementById('addressLink').textContent
+        
+        link.addEventListener('click', () => {
+            console.log('goToPlacemarkBalloon(map, clusterer, address, coords)')
+        })
+    })
 
     return clusterer
 
