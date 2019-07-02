@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Курсовой проект №1</title>
+        <script src="https://api-maps.yandex.ru/2.1/?apikey=35cfb11b-564a-46b4-b6e1-9669c9b744e4&lang=ru_RU" type="text/javascript"></script>
+        <script src="https://yandex.st/jquery/2.2.3/jquery.min.js" type="text/javascript"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.js"></script>
+    </head>
+    <body>
+        <div id="map" style="width: 1280px; height: 800px"></div>
+        <script type="module" src="./index.js"></script>
+    </body>
+    <script id="balloon-template" type="test/x-handlebars-template">
+<fieldset style="width: 300px; height: 400px">
+    <div id="address" style="width: 300px; height: 50px"><h3> {{ properties.address }} </h3></div><br>
+    <div id="balloonReviews" style="width: 200px; height: 50px">{{#if properties.review}}
+        {{ properties.review.name }}: {{  properties.review.place }}, {{  properties.review.comment }}
+        {{else}}Отзывов пока нет{{/if}}
+    </div>
+    <div><b>Ваш отзыв</b></div>
+    <input placeholder="Ваше имя" type="text" id="balloonInputName"><br><br>
+    <input placeholder="Укажите место"type="text" id="balloonInputPlace"><br><br>
+    <input placeholder="Поделитесь впечатлениями" type="text" id="balloonInputComment" style="width: 200px; height: 100px"><br><br>
+    <button id="balloonAddReviewButton" >Добавить</button>
+</fieldset>
+    </script>
+</html>
