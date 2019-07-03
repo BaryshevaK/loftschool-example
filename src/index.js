@@ -18,8 +18,7 @@ async function main () { // eslint-disable-line
             }, {
                 searchControlProvider: 'yandex#search'
             });
-        var clusterer = Clusterer()
-        myMap.geoObjects.add(clusterer);
+        var clusterer =  await Clusterer(myMap, addReview)
         FillPlacemarksFromStorage(myMap, clusterer, addReview)
         // Слушаем клик на карте.
         myMap.events.add('click', async function (e) {
@@ -39,18 +38,22 @@ main()
 
 
 function addReview (myMap, clusterer, address, coords) {
-    const dateTime = Dater();
-    const nameInput = document.getElementById('balloonInputName');
-    const placeInput = document.getElementById('balloonInputPlace');
-    const commentInput = document.getElementById('balloonInputComment');
-    const reviews = document.getElementById('balloonReviews');
-    const newReview = { name: nameInput.value, place: placeInput.value, comment: commentInput.value, dateTime: dateTime };
-    const newReviewText = `${newReview.name} ${newReview.place} ${dateTime}\n${newReview.comment}`;
-    const storedLocations = JSON.parse(localStorage.getItem('locations', '') || '[]');
+    const dateTime = Dater(),
+        nameInput = document.getElementById('balloonInputName'),
+        placeInput = document.getElementById('balloonInputPlace'),
+        commentInput = document.getElementById('balloonInputComment'),
+        reviews = document.getElementById('balloonReviews'),
+        newReview = { name: nameInput.value, place: placeInput.value, comment: commentInput.value, dateTime: dateTime },
+        newReviewText = `${newReview.name} ${newReview.place} ${dateTime}\n${newReview.comment}`,
+        storedLocations = JSON.parse(localStorage.getItem('locations', '') || '[]'),
+        newLocation = {address: address, coords: coords, review: newReview };
+
     console.log(reviews.innerText);
     reviews.innerText = (reviews.innerText==='Отзывов пока нет') ? newReviewText : `${reviews.innerText}\n${newReviewText}`;
-    storedLocations.push({address: address, coords: coords, review: newReview });
+    storedLocations.push(newLocation);
     localStorage.setItem('locations', JSON.stringify(storedLocations));
-    Marker(myMap, clusterer, coords, address, newReview, addReview);
+    Marker(myMap, clusterer, newLocation, addReview);
     nameInput.value = placeInput.value = commentInput.value = '';
 }
+
+

@@ -4,13 +4,16 @@ export default async(map, clusterer, balloonopenFunction) => { // eslint-disable
     var storedLocations = JSON.parse(localStorage.getItem('locations', '') || '[]')
     var placemarks = [];
 
-    console.log(storedLocations)
+    console.log('Stored locations:',storedLocations)
     storedLocations.forEach(location => {
-        var newPlacemark = Marker(map, clusterer, location.coords, location.address, location.review, balloonopenFunction);
+        var newPlacemark = Marker(map, clusterer, location, balloonopenFunction);
 
         placemarks.push(newPlacemark)
 
     });
 
-    console.log(placemarks)  // eslint-disable-line
+    // console.log(placemarks)  // eslint-disable-line
+    // console.log(map.geoObjects) 
+    // map.geoObjects.each( object=> console.log(object) )
+
 }

@@ -1,9 +1,11 @@
-export default () => {
+import Layout from './balloonLayout.js'
+
+export default async (myMap, addReview) => {
     var customItemContentLayout = ymaps.templateLayoutFactory.createClass(
-        '<div> {{ properties.review.place }} <div> ' +
-        '<div><a id="addressLink" href="javascript:void(0)"> {{ properties.address }} </a> <div> ' +
-        '<div> {{ properties.review.comment }} <div> ' +
-        '<div> {{ properties.review.dateTime }} <div> '
+        '<div id="clustererItemPlace">{{ properties.review.place }}</div> ' +
+        '<div><a id="clustererItemAddressLink" href="javascript:void(0)">{{ properties.address }}</a> </div> ' +
+        '<div id="clustererItemComment">{{ properties.review.comment }}</div> ' +
+        '<div id="clustererItemDateTime">{{ properties.review.dateTime }}</div> '
     );
 
     console.log(customItemContentLayout)
@@ -35,13 +37,37 @@ export default () => {
 
     clusterer.events.add('balloonopen', async () => {
         
-        const link = document.getElementById('addressLink').textContent
-        
-        link.addEventListener('click', () => {
-            console.log('goToPlacemarkBalloon(map, clusterer, address, coords)')
+        const place = document.getElementById('clustererItemPlace'),
+            link = document.getElementById('clustererItemAddressLink'),
+            comment = document.getElementById('clustererItemComment'),
+            dateTime = document.getElementById('clustererItemDateTime')
+
+        link.addEventListener('click', async () => {
+            console.log('Hello there, general Kenobi')
+            await clusterer.balloon.close();
+            openBalloon(myMap, clusterer, place.innerText, link.innerText, comment.innerText, dateTime.innerText, addReview)
         })
     })
+    myMap.geoObjects.add(clusterer);
 
     return clusterer
 
+}
+
+async function openBalloon(myMap, clusterer, place, address, comment, dateTime, addReview) {
+    const storedLocations = JSON.parse(localStorage.getItem('locations', '') || '[]');
+    const foundLocations = storedLocations.filter( n => n.review.place===place && n.address===address && n.review.comment===comment && n.review.dateTime===dateTime );
+    console.log(foundLocations);
+    const balloonLayout = Layout(address, foundLocations[0].review)
+    await myMap.balloon.open(foundLocations[0].coords, balloonLayout)
+    document.getElementById("balloonAddReviewButton").addEventListener("click", () => {
+        addReview(myMap, clusterer, foundLocations[0].address, foundLocations[0].coords)
+    });
+    const sameLocations = storedLocations.filter(n=>  n.address===address && !( n.review.place===place && n.review.comment===comment && n.review.dateTime===dateTime))
+    console.log(sameLocations)
+    const reviews = document.getElementById('balloonReviews')
+    sameLocations.forEach(sameLocation => {
+        var newReviewText = `${sameLocation.review.name} ${sameLocation.review.place} ${sameLocation.review.dateTime}\n${sameLocation.review.comment}`;
+        reviews.innerText +=`\n${newReviewText}`;
+    });
 }
