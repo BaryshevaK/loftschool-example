@@ -1,0 +1,90 @@
+* { 
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    font: 13px Helvetica,Arial; height:100%
+}
+
+#block {
+    position: absolute;
+    width: 100%;
+    top: 0px;
+    bottom: 0px
+}
+/* #loginform { position: fixed;
+    z-index: 3;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(8,8,8, 0.7);
+} */
+#loginform #close_login
+{
+ width:15px;
+ height:15px;
+}
+
+#loginform
+{
+ width:300px;
+ height:150px;
+ padding:10px ;
+ margin-top:100px ;
+ background-color:#585858;
+ border-radius:3px;
+ box-shadow:0px 0px 10px 0px #424242;
+ padding:10px ;
+ box-sizing:border-box;
+ font-family:helvetica;
+ /* visibility:hidden;
+ display:none; */
+}
+
+#loginform #FIO
+{
+ width:250px;
+ height:40px;
+ border:2px solid silver;
+ border-radius:3px;
+ padding:5px ;
+}
+
+#loginform #nickname
+{
+ margin-top:5px ;
+ width:250px;
+ height:40px;
+ border:2px solid silver;
+ border-radius:3px;
+ padding:5px !important;
+}
+
+#loginform #enter
+{
+ margin-left:-5px !important;
+ margin-top:10px !important;
+ width:250px;
+ height:40px;
+ border:none;
+ border-radius:3px;
+ color:#E6E6E6;
+ background-color:grey;
+ font-size:20px;
+}
+
+#login input {
+    border: 1;
+    width: 60%;
+}
+
+#send { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+#send input { border: 0; padding: 10px; width: 70%; margin-right: .5%; }
+#send button { width: 9.5%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+#messages { list-style-type: none; margin: 0; padding: 0; }
+#messages li { padding: 5px 10px; }
+#messages li:nth-child(odd) { background: #eee; }
+.left-column { float: left; width: 20%; background: #aaa; height: 100%; }
+.right-column { float: left; width: 80%; }
+
