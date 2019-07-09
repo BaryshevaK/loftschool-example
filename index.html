@@ -13,7 +13,7 @@
   <body>
         <div id="block">
             <div class="left-column">
-                <img id="img_currentUser" src='/images/emptyUser.png' width=50 height=50>
+                <img id="img_currentUser" src='/images/emptyUser.png' width=50 height=50 onclick="showPicOverlay()">
                 <h3 id="currentUser">Добро пожаловать!</h3>
                 <h4 id="participants"></h4>
                 <ul id="users"></ul>
@@ -35,7 +35,25 @@
                     </form>
                 </div>
             </div>
+            <div id="picOverlay">
+                <div id="picForm">
+                    <form action="">
+                        <div id="dropZone">
+                            <div id="dropZone-text"> Для загрузки, перетащите файл сюда.</div>
+                        </div>
+                        <button id="cancel" onclick="hidePicOverlay()">Отмена</button>
+                        <button id="upload" onclick="hidePicOverlay()">Загрузить</button>
+                    </form>
+                </div>
+            </div>
         </div>
-
   </body>
+  <script> 
+        function showPicOverlay() {
+            document.getElementById("picOverlay").style.display = "block";
+        }
+        function hidePicOverlay() {
+            document.getElementById("picOverlay").style.display = "none";
+        }
+  </script>
 </html>

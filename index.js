@@ -1,10 +1,15 @@
 var express = require('express')
+var multer  = require('multer')
+require( 'string.prototype.startswith' );
+
 var app = express();
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 // var serveIndex = require('serve-index');
 
 var users = [];
+
+var upload = multer( { dest: 'uploads/' } );
 
 
 app.use(express.json());       // to support JSON-encoded bodies
@@ -13,15 +18,19 @@ app.get('/', function(req, res){
     res.sendFile(__dirname + '/index.html');
 });
 
-app.post('/users', function(req, res){
-    const myUser = req.body;
-    myUser.userId = uuidv4();
-    console.log(myUser)
-    res.send(myUser);
-});
-
 app.get('/users', function(req, res){
     res.send(users);
+});
+
+app.post('/upload', upload.single( 'file' ), function(req, res, next) {
+    if ( !req.file.mimetype.startsWith( 'image/' ) ) {
+        return res.status( 422 ).json( {
+          error : 'The uploaded file must be an image'
+        } );
+      }
+    console.log(req.headers)
+    console.log(req.file); // the uploaded file object
+    res.status( 200 ).send( req.file )
 });
 
 app.get('/app.js', function(req, res){
@@ -36,11 +45,16 @@ app.get('/index.css', function(req, res){
     res.sendFile(__dirname + '/index.css');
 });
 
+app.get('/imageHandler.js', function(req, res){
+    res.sendFile(__dirname + '/imageHandler.js');
+});
+
 app.get('/requester.js', function(req, res){
     res.sendFile(__dirname + '/requester.js');
 });
 
 app.use('/images', express.static('images'));
+app.use('/uploads', express.static('uploads'));
 
 
 
@@ -50,8 +64,8 @@ io.on('connection', function(socket){
         io.emit('chat message', msg, user, time);
     });
     socket.on('login', function(FIO, nickname){
-        newId = this.id
-        newUser = { FIO: FIO, nickname: nickname, userId:newId, imgSrc:'/images/emptyUser.png'}
+        const socketId = this.id
+        newUser = { FIO: FIO, nickname: nickname, socketId:socketId, imgSrc:'/images/emptyUser.png'}
         users.push(newUser)
         io.emit('login', FIO, nickname, this.id, users.length);
         console.log(`User ${nickname} (${FIO}) logged in. Id is ${this.id}`);
@@ -59,13 +73,13 @@ io.on('connection', function(socket){
     });
     socket.on('disconnect', function(){
         console.log('User' + this.id + 'disconnected');
-        users = users.filter(user => user.userId!== this.id);
+        users = users.filter(user => user.socketId !== this.id);
         console.log(`Currently in chat: ${users.length} users`)
         io.emit('logoff', this.id, users.length);
     });
 
-    socket.on('changePic', function(userId, imgsrc){
-        io.emit('changePic', userId, imgsrc);
+    socket.on('changePic', function(nickname, imgsrc){
+        io.emit('changePic', nickname, imgsrc);
     });
 });
 
@@ -76,11 +90,3 @@ io.emit('some event', { for: 'everyone' });
 http.listen(3000, function(){
   console.log('listening on *:3000');
 });
-
-
-function uuidv4() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16);
-    });
-  }

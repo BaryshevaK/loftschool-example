@@ -10,6 +10,10 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
-    "socket.io": "^2.2.0"
+    "express-fileupload": "^1.1.5",
+    "multer": "^1.4.1",
+    "npm": "^6.10.0",
+    "socket.io": "^2.2.0",
+    "string.prototype.startswith": "^0.2.0"
   }
 }
