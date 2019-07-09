@@ -20,7 +20,8 @@ async function main() {
         console.log(myUser)
         $('#messageInput').removeAttr('disabled');
         socket.emit('login',  myUser.FIO, myUser.nickname);
-        $('#loginform').remove()
+        document.getElementById("overlay").style.display = "none";
+
         $('#currentUser').text( myUser.FIO)
         var image = document.getElementById("img_currentUser");
         image.addEventListener("click", function() {
